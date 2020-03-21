@@ -115,20 +115,25 @@ class PlacesInput extends Component {
               isLoading: true,
           },
           async () => {
-              const places = await fetch(
-                `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${
-                  this.state.query
-                }&key=${this.props.googleApiKey}&inputtype=textquery&language=${
-                  this.props.language
-                }&fields=${
-                  this.props.queryFields
-                }${this.buildLocationQuery()}${this.buildCountryQuery()}${this.buildTypesQuery()}`
-              ).then(response => response.json());
-
-              this.setState({
-                  isLoading: false,
-                  places: places.predictions,
-              });
+              try {
+                const places = (await fetch(
+                    `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${
+                      this.state.query
+                    }&key=${this.props.googleApiKey}&inputtype=textquery&language=${
+                      this.props.language
+                    }&fields=${
+                      this.props.queryFields
+                    }${this.buildLocationQuery()}${this.buildCountryQuery()}${this.buildTypesQuery()}`
+                  )).json();
+    
+                  this.setState({
+                      isLoading: false,
+                      places: places.predictions,
+                  });
+              } catch (e) {
+                  console.error(e)
+                  this.setState({ isLoading: false })
+              }
           }
         );
     };
