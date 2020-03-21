@@ -116,7 +116,7 @@ class PlacesInput extends Component {
           },
           async () => {
               try {
-                const places = (await fetch(
+                const places = await (await fetch(
                     `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${
                       this.state.query
                     }&key=${this.props.googleApiKey}&inputtype=textquery&language=${
