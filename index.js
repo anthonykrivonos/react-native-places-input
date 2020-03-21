@@ -125,6 +125,8 @@ class PlacesInput extends Component {
                       this.props.queryFields
                     }${this.buildLocationQuery()}${this.buildCountryQuery()}${this.buildTypesQuery()}`
                   )).json();
+
+                  console.log(places)
     
                   this.setState({
                       isLoading: false,
