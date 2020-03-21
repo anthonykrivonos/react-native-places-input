@@ -84,11 +84,6 @@ class PlacesInput extends Component {
 
     buildLocationQuery = () => {
         const { searchLatitude, searchLongitude, searchRadius } = this.props;
-
-        if (!searchLatitude || !searchLongitude || !searchRadius) {
-            return '';
-        }
-
         return `&location=${searchLatitude},${searchLongitude}&radius=${searchRadius}`;
     };
 
@@ -116,7 +111,8 @@ class PlacesInput extends Component {
           },
           async () => {
               try {
-                const places = await (await fetch(
+                
+                const queryString =
                     `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${
                       this.state.query
                     }&key=${this.props.googleApiKey}&inputtype=textquery&language=${
@@ -124,17 +120,21 @@ class PlacesInput extends Component {
                     }&fields=${
                       this.props.queryFields
                     }${this.buildLocationQuery()}${this.buildCountryQuery()}${this.buildTypesQuery()}`
-                  )).json();
+                
+                console.log(`querty: ${queryString}`)
+                
+                const places = await (await fetch(queryString)).json();
+                    
 
-                  console.log(places)
-    
-                  this.setState({
-                      isLoading: false,
-                      places: places.predictions,
-                  });
+                console.log(places)
+
+                this.setState({
+                    isLoading: false,
+                    places: places.predictions,
+                });
               } catch (e) {
-                  console.error(e)
-                  this.setState({ isLoading: false })
+                console.error(e)
+                this.setState({ isLoading: false })
               }
           }
         );
@@ -183,9 +183,9 @@ PlacesInput.propTypes = {
     queryFields: PropTypes.string,
     queryCountries: PropTypes.array,
     queryTypes: PropTypes.string,
-    searchRadius: PropTypes.number,
-    searchLatitude: PropTypes.number,
-    searchLongitude: PropTypes.number,
+    searchRadius: PropTypes.number.isRequired,
+    searchLatitude: PropTypes.number.isRequired,
+    searchLongitude: PropTypes.number.isRequired,
     googleApiKey: PropTypes.string.isRequired,
     placeHolder: PropTypes.string,
     textInputProps: PropTypes.object,
